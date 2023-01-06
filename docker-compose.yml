@@ -1,0 +1,54 @@
+version: '3'
+services:
+  db:
+    build:
+      context: .
+      dockerfile: Dockerfile.db
+    container_name: postgres_from_dump
+    env_file:
+      - ./.env.db
+    ports:
+      - "5432:5432"
+    networks:
+      - my_network
+
+  elasticsearch:
+    image: elasticsearch:7.17.8
+    container_name: elasticsearch
+    environment:
+        - discovery.type=single-node
+        - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+#    expose:
+#      - 9200
+    ports:
+      - "9200:9200"
+    networks:
+      - my_network
+
+  redis:
+    image: redis
+    container_name: redis
+#    expose:
+#      - 6379
+    ports:
+      - "6379:6379"
+    networks:
+      - my_network
+
+#  etl:
+#    build:
+#      context: ./etl
+#    container_name: etl
+#    restart: always
+#    depends_on:
+#      - db
+#      - elasticsearch
+#      - redis
+#    env_file:
+#      - ./etl/.env
+#    networks:
+#      - my_network
+
+networks:
+  my_network:
+    driver: bridge
