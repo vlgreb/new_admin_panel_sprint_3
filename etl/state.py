@@ -76,8 +76,3 @@ class State:
     def get_state(self, key=None) -> Any:
         """Получить состояние по определённому ключу"""
         return self.storage.retrieve_state().get(key, None)
-
-
-if __name__ == '__main__':
-
-    pass

@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+from time import sleep
 
 import psycopg2
 from datetime import datetime
@@ -17,6 +18,9 @@ from transform import DataTransform
 from helpers import backoff
 
 load_dotenv()
+
+INTERVAL = 1
+
 
 @backoff()
 def connect_postgres():
@@ -66,3 +70,6 @@ if __name__ == '__main__':
                 transform_data = transformer.validate_and_transform_data(films)
                 loader.load_data_to_elastic(transform_data)
                 state.set_state("modified", datetime.now().isoformat())
+
+        pg_conn.close()
+        sleep(INTERVAL)
